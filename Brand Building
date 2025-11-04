@@ -1,0 +1,3770 @@
+
+{
+  "name": "Brand Building",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        240
+      ],
+      "id": "7850651a-bbc2-43c7-8595-4f713b91d545",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Let's Start With Your Brand Building",
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "html",
+              "html": "<!-- Your custom HTML here --->\n<div style=\"text-align:center;\">\n  <h3>🚀 Start Your Brand Building Automation</h3>\n\n  <button \n    onclick=\"startAutomation()\" \n    style=\"padding: 12px 24px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer;\">\n    Start Automation\n  </button>\n\n  <p id=\"responseMessage\" style=\"margin-top: 10px; font-weight: bold;\"></p>\n</div>\n\n<script>\n  function startAutomation() {\n    fetch('https://prosyncinfotech.app.n8n.cloud/webhook/start-brand-automation', {\n      method: 'POST'\n    })\n    .then(response => {\n      if (response.ok) {\n        document.getElementById('responseMessage').innerText = '✅ Automation Started!';\n      } else {\n        document.getElementById('responseMessage').innerText = '⚠️ Error starting automation.';\n      }\n    })\n    .catch(error => {\n      document.getElementById('responseMessage').innerText = '❌ Network Error. Try again.';\n    });\n  }\n</script>\n\n\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        16,
+        64
+      ],
+      "id": "e374febd-702a-4f78-8563-200e9e7bd14f",
+      "name": "On form submission",
+      "webhookId": "b23a171d-e307-43f5-ba4a-05af04d860ca"
+    },
+    {
+      "parameters": {
+        "numberInputs": 5
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        848,
+        16
+      ],
+      "id": "b20b6613-f5f2-4f06-b9c0-5e2160171917",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"nicheOptions\": {{ $items().map(item => ({ name: item.json.extracted_niche })) }}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1024,
+        64
+      ],
+      "id": "7e5e85f0-00a6-4c18-a829-7e1371699597",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Please select a category",
+              "fieldType": "checkbox",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "={{ $json.nicheOptions[0].name }}"
+                  },
+                  {
+                    "option": "={{ $json.nicheOptions[1].name }}"
+                  },
+                  {
+                    "option": "={{ $json.nicheOptions[2].name }}"
+                  },
+                  {
+                    "option": "={{ $json.nicheOptions[3].name }}"
+                  },
+                  {
+                    "option": "={{ $json.nicheOptions[4].name }}"
+                  }
+                ]
+              },
+              "limitSelection": "exact"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        1168,
+        64
+      ],
+      "id": "8c820c2c-6d44-40d0-ae26-9f00a5feafe4",
+      "name": "Form",
+      "webhookId": "2fa52159-192e-476d-b13a-46cd259b8691"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.output;\n\n// Use regex to extract the first heading with the product name\nconst match = raw.match(/###\\s*\\d+\\.\\s\\*\\*(.*?)\\*\\*/);\n\nif (match && match[1]) {\n  return [\n    {\n      json: {\n        extracted_niche: match[1].trim()\n      }\n    }\n  ];\n} else {\n  return [\n    {\n      json: {\n        extracted_niche: \"Not Found\"\n      }\n    }\n  ];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        592,
+        -288
+      ],
+      "id": "58430b0e-a8c1-414c-99c9-a484d569fd94",
+      "name": "Niche 1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.output;\n\n// Use regex to extract the second heading with the product name\nconst match = raw.match(/###\\s*2\\.\\s\\*\\*(.*?)\\*\\*/);\n\nif (match && match[1]) {\n  return [\n    {\n      json: {\n        extracted_niche: match[1].trim()\n      }\n    }\n  ];\n} else {\n  return [\n    {\n      json: {\n        extracted_niche: \"Not Found\"\n      }\n    }\n  ];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        592,
+        -112
+      ],
+      "id": "43124b60-2ec0-4d19-993a-f059f2ec98aa",
+      "name": "Niche 2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.output;\n\nconst match = raw.match(/###\\s*3\\.\\s\\*\\*(.*?)\\*\\*/);\n\nif (match && match[1]) {\n  return [\n    {\n      json: {\n        extracted_niche: match[1].trim()\n      }\n    }\n  ];\n} else {\n  return [\n    {\n      json: {\n        extracted_niche: \"Not Found\"\n      }\n    }\n  ];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        592,
+        64
+      ],
+      "id": "0dbc71d0-09c8-4f4d-bdc0-67b7ac05afa6",
+      "name": "Niche 3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.output;\n\nconst match = raw.match(/###\\s*4\\.\\s\\*\\*(.*?)\\*\\*/);\n\nif (match && match[1]) {\n  return [\n    {\n      json: {\n        extracted_niche: match[1].trim()\n      }\n    }\n  ];\n} else {\n  return [\n    {\n      json: {\n        extracted_niche: \"Not Found\"\n      }\n    }\n  ];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        592,
+        288
+      ],
+      "id": "97717383-19f9-467d-aa23-56efa7ca8c07",
+      "name": "Niche 4"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.output;\n\nconst match = raw.match(/###\\s*5\\.\\s\\*\\*(.*?)\\*\\*/);\n\nif (match && match[1]) {\n  return [\n    {\n      json: {\n        extracted_niche: match[1].trim()\n      }\n    }\n  ];\n} else {\n  return [\n    {\n      json: {\n        extracted_niche: \"Not Found\"\n      }\n    }\n  ];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        592,
+        496
+      ],
+      "id": "7467ffa9-3e07-4943-8027-28e66280e3f8",
+      "name": "Niche 5"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1312,
+        240
+      ],
+      "id": "357dd87e-186a-4faf-8a4f-3aba0f03d9da",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.message?.content || \"\";\n\n// Match first product idea\nconst match = raw.match(/1\\.\\s*(.+)/);\n\nreturn [\n  {\n    json: {\n      product_idea_1: match?.[1]?.trim() || \"Not found\"\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1984,
+        -208
+      ],
+      "id": "9e6544af-ba9b-4a6f-8e6b-4936d65f94a8",
+      "name": "Product Idea 1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2256,
+        48
+      ],
+      "id": "1cd7bd8c-95a7-437a-bde8-3a3511fa9010",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"productOptions\": [\n    { \"name\": \"{{ $json.product_idea_1 }}\" },\n    { \"name\": \"{{ $json.product_idea_2 }}\" },\n    { \"name\": \"{{ $json.product_idea_3 }}\" }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2560,
+        64
+      ],
+      "id": "0cdf4d07-9cae-4a08-97df-cf9e1255a9c3",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Please select a product",
+              "fieldType": "checkbox",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "={{ $json.productOptions[0].name }}"
+                  },
+                  {
+                    "option": "={{ $json.productOptions[1].name }}"
+                  },
+                  {
+                    "option": "={{ $json.productOptions[2].name }}"
+                  }
+                ]
+              },
+              "limitSelection": "exact"
+            },
+            {
+              "fieldLabel": "What should be the target audience for this product",
+              "placeholder": "doctors",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        2768,
+        64
+      ],
+      "id": "39951d54-f983-4444-9368-7129aa721ed8",
+      "name": "Form1",
+      "webhookId": "2fa52159-192e-476d-b13a-46cd259b8691"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.message?.content || \"\";\n\n// Match second product idea\nconst match = raw.match(/2\\.\\s*(.+)/);\n\nreturn [\n  {\n    json: {\n      product_idea_2: match?.[1]?.trim() || \"Not found\"\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1984,
+        64
+      ],
+      "id": "fa697eda-f3d2-4f41-aba8-297cdea8f428",
+      "name": "Product Idea 2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.message?.content || \"\";\n\n// Match third product idea\nconst match = raw.match(/3\\.\\s*(.+)/);\n\nreturn [\n  {\n    json: {\n      product_idea_3: match?.[1]?.trim() || \"Not found\"\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        400
+      ],
+      "id": "37d3191f-6a4c-43dd-b5fd-d1538c578e07",
+      "name": "Product Idea 3"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2976,
+        240
+      ],
+      "id": "6c5147c3-79dd-4ca8-9412-d275b1335ef7",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "“Act like a 7-figure eCommerce strategist. Suggest 5 profitable e-commerce niches for 2025\nbased on rising demand, low competition, emotional connect, and ease of sourcing from India or\nChina. Explain each with target customer psychology and growth angle.”",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        160,
+        64
+      ],
+      "id": "9fd3b71a-3ad5-471a-bfc1-6523b904e712",
+      "name": "🔍 Niche Research"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=“From the niche ‘[{{ $json['Please select a category'] }}]’, suggest 3 product ideas that:\n1. Are unique or high-perceived value\n2. Can sell for 3x cost\n3. Are easy to ship and store\nAlso suggest bonus bundling opportunities.”",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1312,
+        64
+      ],
+      "id": "7595c16f-c3e8-4673-b8a0-aea8bac502d5",
+      "name": "🎯 Product Selection"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=“Suggest 5 powerful brand names for a [{{ $json['Please select a product'] }}] targeting [{{ $json['What should be the target audience for this product'] }}]. Names should be:\n• Short\n• Easy to remember\n• Emotionally resonant\n• Domain available (.com or .in)\n• Trademark-safe (suggest using quick IPIndia.gov.in check after)” ",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        2976,
+        64
+      ],
+      "id": "fbf91cd2-ec75-48f4-828b-eb497e1a5587",
+      "name": "💡 Brand Name Creation"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 5,
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        3728,
+        16
+      ],
+      "id": "4fb60cf2-ae65-43da-85c0-c3bc081f59d3",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"brandOptions\": [\n    { \"name\": \"{{ $json.brand_name_1 }}\" },\n    { \"name\": \"{{ $json.brand_name_2 }}\" },\n    { \"name\": \"{{ $json.brand_name_3 }}\" },\n    { \"name\": \"{{ $json.brand_name_4 }}\" },\n    { \"name\": \"{{ $json.brand_name_5 }}\" }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3920,
+        64
+      ],
+      "id": "ccc9e103-462c-4a98-9ae1-cd6230987edf",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "=Please select a brand name",
+              "fieldType": "checkbox",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "={{ $json.brandOptions[0].name }}"
+                  },
+                  {
+                    "option": "={{ $json.brandOptions[1].name }}"
+                  },
+                  {
+                    "option": "={{ $json.brandOptions[2].name }}"
+                  },
+                  {
+                    "option": "={{ $json.brandOptions[3].name }}"
+                  },
+                  {
+                    "option": "={{ $json.brandOptions[4].name }}"
+                  }
+                ]
+              },
+              "limitSelection": "exact"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        4128,
+        64
+      ],
+      "id": "cd027375-7d82-42e1-89b2-dba92e54df64",
+      "name": "Form2",
+      "webhookId": "2fa52159-192e-476d-b13a-46cd259b8691"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.output;\n\n// Regex to capture the 1st brand name\nconst match = raw.match(/1\\.\\s*(.*)/);\n\nif (match && match[1]) {\n  return [{ json: { brand_name_1: match[1].trim() } }];\n} else {\n  return [{ json: { brand_name_1: \"Not Found\" } }];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3392,
+        -288
+      ],
+      "id": "45597597-fcf0-4732-883b-ff0dafd0a344",
+      "name": "Brand Name 1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.output;\n\nconst match = raw.match(/2\\.\\s*(.*)/);\n\nif (match && match[1]) {\n  return [{ json: { brand_name_2: match[1].trim() } }];\n} else {\n  return [{ json: { brand_name_2: \"Not Found\" } }];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3392,
+        -112
+      ],
+      "id": "d42530ad-85d3-4f44-a6ce-045635f5b318",
+      "name": "Brand Name 2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.output;\n\nconst match = raw.match(/3\\.\\s*(.*)/);\n\nif (match && match[1]) {\n  return [{ json: { brand_name_3: match[1].trim() } }];\n} else {\n  return [{ json: { brand_name_3: \"Not Found\" } }];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3392,
+        64
+      ],
+      "id": "4746c6cc-c3c6-4382-97d0-4e874b571a16",
+      "name": "Brand Name 3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.output;\n\nconst match = raw.match(/4\\.\\s*(.*)/);\n\nif (match && match[1]) {\n  return [{ json: { brand_name_4: match[1].trim() } }];\n} else {\n  return [{ json: { brand_name_4: \"Not Found\" } }];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3392,
+        240
+      ],
+      "id": "be8c6f3c-f374-47fc-a175-b0b467a3bbbc",
+      "name": "Brand Name 4"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.output;\n\nconst match = raw.match(/5\\.\\s*(.*)/);\n\nif (match && match[1]) {\n  return [{ json: { brand_name_5: match[1].trim() } }];\n} else {\n  return [{ json: { brand_name_5: \"Not Found\" } }];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3392,
+        400
+      ],
+      "id": "9fd45203-3f26-4f4c-b365-700ab2da7002",
+      "name": "Brand Name 5"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "=“Logo design for a premium brand called {{ $json[\"Please select a brand name\"][0] }} , selling{{ $('Form').item.json[\"Please select a category\"][0] }} . Style: modern,\nclean, versatile for both digital & packaging. Color palette: suggest 3 powerful options.”",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        4352,
+        64
+      ],
+      "id": "87f3a236-fc9a-4c9b-b3c0-fcc5d457c378",
+      "name": "Generate an image",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "html",
+              "html": "<div style=\"text-align:center; padding: 20px; background-color: #f9f9f9; border-radius: 10px; margin: 20px 0;\">\n  <img src=\"{{ $('Edit Fields3').item.json.imageUrl }}\" \n       alt=\"Generated Image for Approval\" \n       style=\"max-width: 100%; \n              max-height: 100px; \n              height: auto; \n              width: auto;\n              border: 2px solid #ddd; \n              border-radius: 12px; \n              box-shadow: 0 4px 8px rgba(0,0,0,0.1);\n              object-fit: contain;\n              cursor: pointer;\" \n       onclick=\"window.open(this.src, '_blank')\"\n       onerror=\"this.style.display='none'; this.nextElementSibling.style.display='block';\" />"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        4720,
+        64
+      ],
+      "id": "75532811-3a3d-4ede-ace6-8fd9b3740a75",
+      "name": "Form3",
+      "webhookId": "036748c6-b54f-4544-98fa-a899f97c455d"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Prompt:\n“Write a powerful brand story for {{ $('Form2').first().json[\"Please select a brand name\"][0] }} niche {{ $('Form').first().json['Please select a category'] }} that:\n• Builds emotional connection\n• Establishes trust\n• Shares the mission & founder’s ‘why’\n• Is under 200 words\nTone: aspirational yet relatable.”",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        5200,
+        64
+      ],
+      "id": "78d2357a-21d7-4ec1-9195-7a2acc5fa33f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        5200,
+        240
+      ],
+      "id": "47433762-f420-4781-a067-56306c6a9fe9",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "html",
+              "html": "<div style=\"padding: 12px; background:#f9f9f9; border:1px solid #ddd; border-radius:6px; font-size:15px; line-height:1.6;\">\n {{$('AI Agent').item.json.output}} \n</div>\n"
+            },
+            {
+              "fieldLabel": "Move to Next Step",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Next"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        6032,
+        64
+      ],
+      "id": "291e78f9-7a09-4eda-b426-09c1b85feb91",
+      "name": "Form4",
+      "webhookId": "f4c1325c-f915-4807-b05f-63c941dd7452"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        6192,
+        32
+      ],
+      "id": "1dedfc42-8869-44a0-abda-f0cd4a191a3d",
+      "name": "OpenAI Chat Model4",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{$json[\"sessionId\"] || $json[\"formMode\"] || \"default-session\"}}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        3088,
+        1072
+      ],
+      "id": "32a194ec-e7ee-406b-a22d-7608b8f24182",
+      "name": "Master Memory"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-3.5-TURBO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.output }} extract the product ideas"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1600,
+        64
+      ],
+      "id": "3111478e-8081-466d-895d-a0d03d962701",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('Form2').item.json['Please select a brand name'][0] }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4352,
+        -304
+      ],
+      "id": "c3c72f05-e03d-4ca3-a6fa-4952dbce1b29",
+      "name": "Create folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BoH3kPeeEI4NqWni",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4608,
+        -288
+      ],
+      "id": "fac51acd-7dd4-4342-a4ad-d7f247734e77",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get folder ID from Create Folder node\nconst folderId = $items(\"Create folder\")[0].json.id;\n\n// Get image binary from Generate an image node\nconst image = $items(\"Generate an image\")[0].binary.data;\n\nreturn [\n  {\n    json: {\n      folderId\n    },\n    binary: {\n      data: image\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4784,
+        -288
+      ],
+      "id": "bfd8d0b7-d462-465f-bb47-042852bfc48a",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "name": "={{$json[\"fileName\"]}}Brand Logo{{$json[\"fileExtension\"]}}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.folderId }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4960,
+        -288
+      ],
+      "id": "86d801e6-7ffd-4b6f-91f1-792d53cb1a6a",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BoH3kPeeEI4NqWni",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone",
+            "allowFileDiscovery": true
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        5152,
+        -288
+      ],
+      "id": "e801bdf5-f354-450e-9363-16de1f4ecd73",
+      "name": "Share file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BoH3kPeeEI4NqWni",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"imageUrl\": \"https://drive.google.com/uc?export=view&id={{ $('Upload file').item.json.id }}\"\n}\n",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5360,
+        -288
+      ],
+      "id": "d9e004b8-241c-47f2-a173-3af00b6d7dc6",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "folderId": "={{ $('Upload file').item.json.permissions[0] }}",
+        "title": "={{ $('Create folder').first().json.name }} brand Story "
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        5504,
+        64
+      ],
+      "id": "8cdbea69-5ebe-4d76-9d2f-ea7ccb985946",
+      "name": "Create a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('AI Agent').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        5680,
+        64
+      ],
+      "id": "ad797336-22ee-43c6-92e6-daefe7682c60",
+      "name": "Update a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Create a document').item.json.id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').first().json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        5856,
+        64
+      ],
+      "id": "024b64c3-0cce-4886-9d2e-be1ca299ab35",
+      "name": "Move file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BoH3kPeeEI4NqWni",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "={{ $('Upload file').item.json.permissions[0] }}",
+        "title": "={{ $('Create folder').first().json.name }} Company Profile"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        6496,
+        64
+      ],
+      "id": "d9e8d210-dce3-4e06-afda-c0fbea661b76",
+      "name": "Create a document1",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Company Profile').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        6688,
+        64
+      ],
+      "id": "7a4d8209-3e9e-493a-a461-076c91b292fa",
+      "name": "Update a document1",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.documentId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').first().json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        6864,
+        64
+      ],
+      "id": "08a3b0c0-dd30-47ee-b7c2-9355caefe48d",
+      "name": "Move file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BoH3kPeeEI4NqWni",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        7168,
+        48
+      ],
+      "id": "95959c6e-0cb4-43ec-be12-70f64d024e13",
+      "name": "OpenAI Chat Model5",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "={{ $('Upload file').item.json.permissions[0] }}",
+        "title": "={{ $('Create folder').first().json.name }} Product Mockups (Models) & Video Ad Prompt"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        7536,
+        64
+      ],
+      "id": "aee3df1f-9611-4f27-ac3c-e8101e43351b",
+      "name": "Create a document2",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Product Mock-Up With Video Ad').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        7728,
+        64
+      ],
+      "id": "31d9283a-7214-4a8e-9054-256980e4c7e7",
+      "name": "Update a document2",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.documentId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').first().json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        7904,
+        64
+      ],
+      "id": "f08e1755-e8c2-4195-a5c0-4bb4e48613b2",
+      "name": "Move file2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BoH3kPeeEI4NqWni",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "html",
+              "html": "<div style=\"padding: 12px; background:#f9f9f9; border:1px solid #ddd; border-radius:6px; font-size:15px; line-height:1.6;\">\n {{$('Product Mock-Up With Video Ad').item.json.output}} \n</div>\n"
+            },
+            {
+              "fieldLabel": "Move to Next Step",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Next"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        8096,
+        64
+      ],
+      "id": "e71d3041-26c1-4252-bcef-352c18c39ebf",
+      "name": "Form6",
+      "webhookId": "f4c1325c-f915-4807-b05f-63c941dd7452"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        8272,
+        32
+      ],
+      "id": "6ab531bf-a4ef-4119-8ac8-0532a3b44e1b",
+      "name": "OpenAI Chat Model6",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=“Define the ideal customer for {{ ( $item(0).$node['Form2'].json['Please select a brand name'] || [])[0] || '' }}. Include:\n• Demographics\n• Psychographics\n• Daily routines\n• Main frustrations\n• Why they’ll LOVE this product”",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        8272,
+        -144
+      ],
+      "id": "bff49d31-701c-45b6-bfef-592797beeb3f",
+      "name": "Customer Avatar"
+    },
+    {
+      "parameters": {
+        "folderId": "={{ $('Upload file').item.json.permissions[0] }}",
+        "title": "={{ $('Create folder').first().json.name }} Customer Avatar"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        8608,
+        48
+      ],
+      "id": "f8bfb7b1-a166-4cfc-b828-9dc291f0759f",
+      "name": "Create a document3",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Customer Avatar').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        8800,
+        48
+      ],
+      "id": "aa425b3c-9293-4048-be00-996585b0f8ed",
+      "name": "Update a document3",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.documentId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').first().json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        9008,
+        48
+      ],
+      "id": "9587dbb5-9f7d-4f33-b60c-64ee752c7db3",
+      "name": "Move file3",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BoH3kPeeEI4NqWni",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "html",
+              "html": "<div style=\"padding: 12px; background:#f9f9f9; border:1px solid #ddd; border-radius:6px; font-size:15px; line-height:1.6;\">\n{{ $('Customer Avatar').item.json.output }}\n</div>\n"
+            },
+            {
+              "fieldLabel": "Move to Next Step",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Next"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        9248,
+        48
+      ],
+      "id": "539b04f1-804b-46a6-bb14-72082a730043",
+      "name": "Form7",
+      "webhookId": "f4c1325c-f915-4807-b05f-63c941dd7452"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        9440,
+        48
+      ],
+      "id": "9414d8ea-a824-4695-a97b-32a7e2253427",
+      "name": "OpenAI Chat Model7",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=“Create a basic sales funnel for {{ ( $item(0).$node['Form2'].json['Please select a brand name'] || [])[0] || '' }} selling {{ ( $item(0).$node['Form1'].json['Please select a product'] || [])[0] || '' }}\n. Include:\n• Lead magnet idea\n• Landing page content\n• Upsell opportunity\n• WhatsApp/Email follow-up ideas”",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        9440,
+        -128
+      ],
+      "id": "866e2806-70db-4046-a0ab-37b62cf6873a",
+      "name": "Sales Funnel"
+    },
+    {
+      "parameters": {
+        "folderId": "={{ $('Upload file').item.json.permissions[0] }}",
+        "title": "= Sales Funnel {{ $('Create folder').first().json.name }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        9760,
+        32
+      ],
+      "id": "ef426ef9-0ef0-4c08-b9ef-2cf6d0f55e48",
+      "name": "Create a document4",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Sales Funnel').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        9936,
+        32
+      ],
+      "id": "465a63b0-e06c-4b88-b682-9906937c5b22",
+      "name": "Update a document4",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.documentId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').first().json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        10144,
+        32
+      ],
+      "id": "310f4a6d-83c8-4914-8fb2-36f6f9b71cb5",
+      "name": "Move file4",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BoH3kPeeEI4NqWni",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "html",
+              "html": "<div style=\"padding: 12px; background:#f9f9f9; border:1px solid #ddd; border-radius:6px; font-size:15px; line-height:1.6;\">\n {{ $('Sales Funnel').item.json.output }}\n</div>\n"
+            },
+            {
+              "fieldLabel": "Move to Next Step",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Next"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        10400,
+        32
+      ],
+      "id": "b74204ff-b04d-48b7-9efc-1f76464fae64",
+      "name": "Form8",
+      "webhookId": "f4c1325c-f915-4807-b05f-63c941dd7452"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=“Find top 3 competitors for {{ ( $item(0).$node['Form1'].json['Please select a product'] || [])[0] || '' }}\n in India. Breakdown their:\n• Pricing\n• USP\n• Website/Instagram look\n• What they do well\n• Where we can beat them”",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        10576,
+        -112
+      ],
+      "id": "e37d87d7-19fb-41dd-b1b9-1624532dd00e",
+      "name": "Competitor Audit"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        10576,
+        64
+      ],
+      "id": "3f954145-4cdf-4dac-bded-81132ba49b8b",
+      "name": "OpenAI Chat Model8",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "={{ $('Upload file').item.json.permissions[0] }}",
+        "title": "=Competitor Audit {{ $('Create folder').first().json.name }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        10928,
+        16
+      ],
+      "id": "0d0e57b2-283e-47f5-ad35-657d54ce6e30",
+      "name": "Create a document5",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Competitor Audit').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        11168,
+        16
+      ],
+      "id": "1dfb4238-5cd7-492e-90c5-1c8d23e3a059",
+      "name": "Update a document5",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.documentId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').first().json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        11408,
+        16
+      ],
+      "id": "462a076b-0e4c-4fb6-904f-0f371663e353",
+      "name": "Move file5",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BoH3kPeeEI4NqWni",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "html",
+              "html": "<div style=\"padding: 12px; background:#f9f9f9; border:1px solid #ddd; border-radius:6px; font-size:15px; line-height:1.6;\">\n {{ $('Competitor Audit').item.json.output }}\n</div>\n"
+            },
+            {
+              "fieldLabel": "Move to Next Step",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Next"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        11712,
+        16
+      ],
+      "id": "d88b91b8-4029-4f63-8bfd-3b4698ff9df4",
+      "name": "Form9",
+      "webhookId": "f4c1325c-f915-4807-b05f-63c941dd7452"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        11936,
+        32
+      ],
+      "id": "55082895-a915-4648-b7bf-5d422a182ab4",
+      "name": "OpenAI Chat Model9",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=“Suggest a high-conversion pricing strategy for {{ ( $item(0).$node['Form1'].json['Please select a product'] || [])[0] || '' }}\n with a 3x profit margin. Include:\n• MRP\n• Anchor pricing\n• Offer pricing\n• Subscription/bundle add-ons”",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        11936,
+        -192
+      ],
+      "id": "6201000a-321a-4bb9-9ad2-9245de4b1da3",
+      "name": "Pricing Strategy"
+    },
+    {
+      "parameters": {
+        "folderId": "={{ $('Upload file').item.json.permissions[0] }}",
+        "title": "={{ $('Create folder').first().json.name }} Pricing Strategy"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        12320,
+        -16
+      ],
+      "id": "f8ee40a2-4186-4d59-bfdb-645267e3f99b",
+      "name": "Create a document6",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Pricing Strategy').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        12544,
+        -16
+      ],
+      "id": "b22673a5-aab9-4ce8-82c9-c6f8beaf67aa",
+      "name": "Update a document6",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.documentId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').first().json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        12768,
+        -16
+      ],
+      "id": "ddebedd3-4cf4-4ed8-835e-0f20a1f3dd67",
+      "name": "Move file6",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BoH3kPeeEI4NqWni",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "html",
+              "html": "<div style=\"padding: 12px; background:#f9f9f9; border:1px solid #ddd; border-radius:6px; font-size:15px; line-height:1.6;\">\n{{ $('Pricing Strategy').item.json.output }} \n</div>\n"
+            },
+            {
+              "fieldLabel": "Move to Next Step",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Next"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        13024,
+        -16
+      ],
+      "id": "a686f36f-a221-4144-bc2c-941e2fd6f402",
+      "name": "Form10",
+      "webhookId": "f4c1325c-f915-4807-b05f-63c941dd7452"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=“Write Instagram bio for {{ ( $item(0).$node['Form1'].json['Please select a product'] || [])[0] || '' }}\n that’s short, bold & emotionally powerful. Then give 3 launch post ideas with captions + CTA.”",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        13232,
+        -192
+      ],
+      "id": "cb051915-d383-48e1-9072-58358f5eccc3",
+      "name": "Social Media Bios & First 3 Posts"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        13232,
+        -32
+      ],
+      "id": "57d5b874-8592-4fd2-9cbf-d82a3810c4b7",
+      "name": "OpenAI Chat Model10",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "={{ $('Upload file').item.json.permissions[0] }}",
+        "title": "=Social Media Bios & First 3 Posts {{ $('Create folder').first().json.name }} "
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        13584,
+        -32
+      ],
+      "id": "d173b116-4a12-40ae-8413-88855c2557da",
+      "name": "Create a document7",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Social Media Bios & First 3 Posts').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        13792,
+        -32
+      ],
+      "id": "23686909-a837-4583-bc77-cda8108b13f2",
+      "name": "Update a document7",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.documentId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').first().json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        14032,
+        -32
+      ],
+      "id": "5b33bfd4-cdf4-482d-9f3d-8becb790ca71",
+      "name": "Move file7",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BoH3kPeeEI4NqWni",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "html",
+              "html": "<div style=\"padding: 12px; background:#f9f9f9; border:1px solid #ddd; border-radius:6px; font-size:15px; line-height:1.6;\">\n {{ $('Social Media Bios & First 3 Posts').item.json.output }}\n</div>\n"
+            },
+            {
+              "fieldLabel": "Move to Next Step",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Next"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        14304,
+        -32
+      ],
+      "id": "6d9c26d1-011d-4349-8bf4-1f6f563fcb0b",
+      "name": "Form11",
+      "webhookId": "f4c1325c-f915-4807-b05f-63c941dd7452"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=“Write landing page content for {{ ( $item(0).$node['Form2'].json['Please select a brand name'] || [])[0] || '' }} selling {{ ( $item(0).$node['Form1'].json['Please select a product'] || [])[0] || '' }}\n. Structure:\n1. Headline\n2. Problem\n\n3. Solution\n4. Benefits\n5. Social proof\n6. Offer\n7. CTA\nKeep it high-converting & mobile optimized.”",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        14544,
+        -192
+      ],
+      "id": "5be1b9a1-57e9-4f63-87fc-ce731cefe748",
+      "name": "Landing Page Content"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        14544,
+        -16
+      ],
+      "id": "f97fecbc-e0ee-4551-8124-fcd38b33a6cd",
+      "name": "OpenAI Chat Model11",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "={{ $('Upload file').item.json.permissions[0] }}",
+        "title": "={{ $('Create folder').first().json.name }} Landing Page Content"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        14848,
+        -48
+      ],
+      "id": "d17661b7-d077-4b75-927f-f88b92e5bbb5",
+      "name": "Create a document8",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Landing Page Content').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        15040,
+        -48
+      ],
+      "id": "a246342b-84c9-4a39-84b8-c2f58bfd57ba",
+      "name": "Update a document8",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.documentId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').first().json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        15248,
+        -48
+      ],
+      "id": "4c7db474-2e03-46ba-bcfe-f1baec1674b2",
+      "name": "Move file8",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BoH3kPeeEI4NqWni",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "html",
+              "html": "<div style=\"padding: 12px; background:#f9f9f9; border:1px solid #ddd; border-radius:6px; font-size:15px; line-height:1.6;\">\n{{ $('Landing Page Content').item.json.output }}  \n</div>\n"
+            },
+            {
+              "fieldLabel": "Move to Next Step",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Next"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        15440,
+        -48
+      ],
+      "id": "f3bd6f2f-3549-44bd-a19c-568f948df9fd",
+      "name": "Form12",
+      "webhookId": "f4c1325c-f915-4807-b05f-63c941dd7452"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=“Write a DM/email script to reach out to Instagram influencers in this niche for a brand collab with {{ ( $item(0).$node['Form2'].json['Please select a brand name'] || [])[0] || '' }}. Make it:\n• Friendly\n• Short\n• Win-win tone\n• Include UGC request”",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        15648,
+        -192
+      ],
+      "id": "9dfacbcc-4517-4e93-9c45-bc7ace0d0204",
+      "name": "Influencer Outreach Script"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        15648,
+        -16
+      ],
+      "id": "aaf7ed0d-3a80-4a1b-99d4-8c2ae556476f",
+      "name": "OpenAI Chat Model12",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "={{ $('Upload file').item.json.permissions[0] }}",
+        "title": "=Influencer Reach Out Script {{ $('Create folder').first().json.name }} "
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        15984,
+        -64
+      ],
+      "id": "3afda01a-237c-41c9-bf32-0f2a3cff88fb",
+      "name": "Create a document9",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Influencer Outreach Script').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        16160,
+        -64
+      ],
+      "id": "01179909-f6d5-4f0b-b79d-c21510e1cbb1",
+      "name": "Update a document9",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.documentId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').first().json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        16352,
+        -64
+      ],
+      "id": "31a6b5b6-d9d6-4971-8cdb-bfe11e5fb82b",
+      "name": "Move file9",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BoH3kPeeEI4NqWni",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "html",
+              "html": "<div style=\"padding: 12px; background:#f9f9f9; border:1px solid #ddd; border-radius:6px; font-size:15px; line-height:1.6;\">\n{{ $('Influencer Outreach Script').item.json.output }}  \n</div>\n"
+            },
+            {
+              "fieldLabel": "Move to Next Step",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Next"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        16576,
+        -64
+      ],
+      "id": "e8626a6d-f108-4d1b-a6f3-bcfbd8aeefce",
+      "name": "Form13",
+      "webhookId": "f4c1325c-f915-4807-b05f-63c941dd7452"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=“Write Amazon listing content for {{ ( $item(0).$node['Form1'].json['Please select a product'] || [])[0] || '' }}\n under {{ ( $item(0).$node['Form2'].json['Please select a brand name'] || [])[0] || '' }}. Include:\n• 1 title\n• 5 bullet points\n• Description\n• SEO keywords for Amazon India”",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        16784,
+        -208
+      ],
+      "id": "fb37a0c1-2972-475c-882d-804fa58b5a70",
+      "name": "Amazon Listing Description"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        16784,
+        -32
+      ],
+      "id": "4617bcea-afb4-4e3d-a8ee-4f072e42b858",
+      "name": "OpenAI Chat Model13",
+      "credentials": {
+        "openAiApi": {
+          "id": "n4uy7iYP5dG8aCTK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "={{ $('Upload file').item.json.permissions[0] }}",
+        "title": "=Amazon Listing Description {{ $('Create folder').first().json.name }} "
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        17120,
+        -48
+      ],
+      "id": "0ddffeda-800f-476b-8b18-194f8617773e",
+      "name": "Create a document10",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Amazon Listing Description').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        17296,
+        -48
+      ],
+      "id": "eddebfc9-2639-44b4-916f-7d349826d131",
+      "name": "Update a document10",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "i4hyPR0eo24I0Wo1",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.documentId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').first().json.id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        17472,
+        -48
+      ],
+      "id": "f08799cd-79cc-4e78-99c7-03044e4364eb",
+      "name": "Move file10",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BoH3kPeeEI4NqWni",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=“Create a professional company profile/About Us page for {{ $('Form2').first().json['Please select a brand name'] }} , selling {{ $('Form1').first().json['Please select a product'] }} . Should include:\n• Vision & mission\n• Team (fabricated for now)\n• Product promise\n• Social proof angle (inspired by similar brands)” ",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        6192,
+        -176
+      ],
+      "id": "0ba49782-e7b1-47a8-af75-9dbf241d2fbd",
+      "name": "Company Profile"
+    },
+    {
+      "parameters": {
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "html",
+              "html": "<div style=\"padding: 12px; background:#f9f9f9; border:1px solid #ddd; border-radius:6px; font-size:15px; line-height:1.6;\">\n {{$('Company Profile').item.json.output}} \n</div>\n"
+            },
+            {
+              "fieldLabel": "Move to Next Step",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Next"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        7056,
+        64
+      ],
+      "id": "b3d42e77-34f4-4f17-b2fc-f248fa6b3557",
+      "name": "Company Profile1",
+      "webhookId": "f4c1325c-f915-4807-b05f-63c941dd7452"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=🧍 Product Mockups (Models)\n\"High-quality lifestyle product mockup for\n{{ ( $item(0).$node['Form2'].json['Please select a brand name'] || [])[0] || '' }}\nbeing used by a\n{{ $item(0).$node['Form1'].json['What should be the target audience for this product'] || '' }}\nin a related setting. Showcase logo clearly. Natural lighting. Instagram-worthy.\"\n\n⸻\n\n🎥 Sora-style Video Ad\n\"Write a Sora-style video ad script (30s) for\n{{ ( $item(0).$node['Form2'].json['Please select a brand name'] || [])[0] || '' }},\nshowcasing\n{{ ( $item(0).$node['Form1'].json['Please select a product'] || [])[0] || '' }}.\nThe ad should:\n• Start with a pain point\n• Show transformation using the product\n• End with emotional impact + CTA\nFormat output as: VOICEOVER + VISUAL DESCRIPTION per shot (5–7 shots).\"\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        7168,
+        -160
+      ],
+      "id": "c9d1bb1e-4aa5-40aa-a7cd-4bfaa1e51972",
+      "name": "Product Mock-Up With Video Ad"
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "completionTitle": "Your Brand is Ready!",
+        "completionMessage": "=🎉 Congratulations!  \nYour brand assets have been successfully generated and saved.\n\n📁 You can access all your files here:  \nhttps://drive.google.com/drive/folders/{{ $item(0).$node['Create folder'].json.id }}?usp=share_link  \n\nWe’ve also shared the folder with public view access so you can easily share it with your team.\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        17968,
+        -48
+      ],
+      "id": "11023392-7c0f-4eb0-b9ea-1fcfed7277d2",
+      "name": "Form5",
+      "webhookId": "5379cb8e-213a-406e-a7ef-b7adfa904788"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "share",
+        "folderNoRootId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        17680,
+        -48
+      ],
+      "id": "df84e5bf-2390-4407-86d5-a15d0280fe00",
+      "name": "Share folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BoH3kPeeEI4NqWni",
+          "name": "Google Drive account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "🔍 Niche Research",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "🔍 Niche Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Niche 1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Niche 2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Niche 3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Niche 4": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Niche 5": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Form": {
+      "main": [
+        [
+          {
+            "node": "🎯 Product Selection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "🎯 Product Selection",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Form1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Product Idea 1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Product Idea 2": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Product Idea 3": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Form1": {
+      "main": [
+        [
+          {
+            "node": "💡 Brand Name Creation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "💡 Brand Name Creation",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔍 Niche Research": {
+      "main": [
+        [
+          {
+            "node": "Niche 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Niche 2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Niche 3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Niche 4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Niche 5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🎯 Product Selection": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Form2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brand Name 2": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Brand Name 3": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Brand Name 4": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "💡 Brand Name Creation": {
+      "main": [
+        [
+          {
+            "node": "Brand Name 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Brand Name 2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Brand Name 3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Brand Name 4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Brand Name 5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brand Name 1": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brand Name 5": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Form2": {
+      "main": [
+        [
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate an image": {
+      "main": [
+        [
+          {
+            "node": "Create folder",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Form3": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Create a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form4": {
+      "main": [
+        [
+          {
+            "node": "Company Profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Company Profile",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Master Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "🔍 Niche Research",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "🎯 Product Selection",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "💡 Brand Name Creation",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Company Profile",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Product Mock-Up With Video Ad",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Customer Avatar",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Sales Funnel",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Competitor Audit",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Pricing Strategy",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Social Media Bios & First 3 Posts",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Landing Page Content",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Influencer Outreach Script",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Amazon Listing Description",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Product Idea 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Product Idea 2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Product Idea 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create folder": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Share file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share file": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Form3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document": {
+      "main": [
+        [
+          {
+            "node": "Move file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document1": {
+      "main": [
+        [
+          {
+            "node": "Update a document1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document1": {
+      "main": [
+        [
+          {
+            "node": "Move file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Product Mock-Up With Video Ad",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document2": {
+      "main": [
+        [
+          {
+            "node": "Update a document2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document2": {
+      "main": [
+        [
+          {
+            "node": "Move file2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form6": {
+      "main": [
+        [
+          {
+            "node": "Customer Avatar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Customer Avatar",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document3": {
+      "main": [
+        [
+          {
+            "node": "Update a document3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document3": {
+      "main": [
+        [
+          {
+            "node": "Move file3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Avatar": {
+      "main": [
+        [
+          {
+            "node": "Create a document3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form7": {
+      "main": [
+        [
+          {
+            "node": "Sales Funnel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sales Funnel",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document4": {
+      "main": [
+        [
+          {
+            "node": "Update a document4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document4": {
+      "main": [
+        [
+          {
+            "node": "Move file4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sales Funnel": {
+      "main": [
+        [
+          {
+            "node": "Create a document4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form8": {
+      "main": [
+        [
+          {
+            "node": "Competitor Audit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model8": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Competitor Audit",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document5": {
+      "main": [
+        [
+          {
+            "node": "Update a document5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document5": {
+      "main": [
+        [
+          {
+            "node": "Move file5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Competitor Audit": {
+      "main": [
+        [
+          {
+            "node": "Create a document5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form9": {
+      "main": [
+        [
+          {
+            "node": "Pricing Strategy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model9": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Pricing Strategy",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document6": {
+      "main": [
+        [
+          {
+            "node": "Update a document6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document6": {
+      "main": [
+        [
+          {
+            "node": "Move file6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pricing Strategy": {
+      "main": [
+        [
+          {
+            "node": "Create a document6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form10": {
+      "main": [
+        [
+          {
+            "node": "Social Media Bios & First 3 Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model10": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Social Media Bios & First 3 Posts",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document7": {
+      "main": [
+        [
+          {
+            "node": "Update a document7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document7": {
+      "main": [
+        [
+          {
+            "node": "Move file7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Social Media Bios & First 3 Posts": {
+      "main": [
+        [
+          {
+            "node": "Create a document7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form11": {
+      "main": [
+        [
+          {
+            "node": "Landing Page Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model11": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Landing Page Content",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document8": {
+      "main": [
+        [
+          {
+            "node": "Update a document8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document8": {
+      "main": [
+        [
+          {
+            "node": "Move file8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Landing Page Content": {
+      "main": [
+        [
+          {
+            "node": "Create a document8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model12": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Influencer Outreach Script",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form12": {
+      "main": [
+        [
+          {
+            "node": "Influencer Outreach Script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document9": {
+      "main": [
+        [
+          {
+            "node": "Update a document9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document9": {
+      "main": [
+        [
+          {
+            "node": "Move file9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Influencer Outreach Script": {
+      "main": [
+        [
+          {
+            "node": "Create a document9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form13": {
+      "main": [
+        [
+          {
+            "node": "Amazon Listing Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model13": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Amazon Listing Description",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document10": {
+      "main": [
+        [
+          {
+            "node": "Update a document10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document10": {
+      "main": [
+        [
+          {
+            "node": "Move file10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Amazon Listing Description": {
+      "main": [
+        [
+          {
+            "node": "Create a document10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file": {
+      "main": [
+        [
+          {
+            "node": "Form4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file1": {
+      "main": [
+        [
+          {
+            "node": "Company Profile1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file2": {
+      "main": [
+        [
+          {
+            "node": "Form6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file3": {
+      "main": [
+        [
+          {
+            "node": "Form7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file4": {
+      "main": [
+        [
+          {
+            "node": "Form8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file5": {
+      "main": [
+        [
+          {
+            "node": "Form9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file6": {
+      "main": [
+        [
+          {
+            "node": "Form10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file7": {
+      "main": [
+        [
+          {
+            "node": "Form11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file8": {
+      "main": [
+        [
+          {
+            "node": "Form12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file9": {
+      "main": [
+        [
+          {
+            "node": "Form13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file10": {
+      "main": [
+        [
+          {
+            "node": "Share folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Company Profile": {
+      "main": [
+        [
+          {
+            "node": "Create a document1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Company Profile1": {
+      "main": [
+        [
+          {
+            "node": "Product Mock-Up With Video Ad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Product Mock-Up With Video Ad": {
+      "main": [
+        [
+          {
+            "node": "Create a document2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share folder": {
+      "main": [
+        [
+          {
+            "node": "Form5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ac353295-1298-4284-ad20-923c7284d971",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bf2d1b34f30c0a60b2a73a107f58d75653d0063fc81d5c443339f9e226614625"
+  },
+  "id": "5YyCsWgioDjfts0Z",
+  "tags": []
+}
